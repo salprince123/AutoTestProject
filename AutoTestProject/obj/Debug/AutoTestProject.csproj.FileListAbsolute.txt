@@ -25,3 +25,8 @@ D:\hocTap\20-21 HK 2\Kiem chung\AutoTestProject\AutoTestProject\AutoTestProject\
 D:\hocTap\20-21 HK 2\Kiem chung\AutoTestProject\AutoTestProject\AutoTestProject\obj\Debug\AutoTestProject.pdb
 D:\hocTap\20-21 HK 2\Kiem chung\AutoTestProject\AutoTestProject\AutoTestProject\bin\Debug\WebDriver.Support.dll
 D:\hocTap\20-21 HK 2\Kiem chung\AutoTestProject\AutoTestProject\AutoTestProject\bin\Debug\WebDriver.Support.xml
+D:\hocTap\20-21 HK 2\Kiem chung\AutoTestProject\AutoTestProject\AutoTestProject\bin\Debug\EPPlus.dll
+D:\hocTap\20-21 HK 2\Kiem chung\AutoTestProject\AutoTestProject\AutoTestProject\bin\Debug\Microsoft.IO.RecyclableMemoryStream.dll
+D:\hocTap\20-21 HK 2\Kiem chung\AutoTestProject\AutoTestProject\AutoTestProject\bin\Debug\System.ComponentModel.Annotations.dll
+D:\hocTap\20-21 HK 2\Kiem chung\AutoTestProject\AutoTestProject\AutoTestProject\bin\Debug\EPPlus.xml
+D:\hocTap\20-21 HK 2\Kiem chung\AutoTestProject\AutoTestProject\AutoTestProject\bin\Debug\Microsoft.IO.RecyclableMemoryStream.xml
