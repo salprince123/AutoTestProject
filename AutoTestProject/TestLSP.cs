@@ -86,14 +86,20 @@ namespace AutoTestProject
 
         
         /// VERSION 2
-        private static object[] sourceTestCase =
+       /* private static object[] sourceTestCase =
         {
             new object[] {"c1", "Bộ", "1" },
             new object[] {"c2", "Bộ", "1" },
             new object[] {"c3", "Bộ", "1" },
             new object[] {"c4", "Bộ", "1" }
-        };
-
+        };*/
+        private static IEnumerable<object> GetLists()
+        {
+            IList<object> users = new List<object>();
+            users.Add(new String[] { "c1", "Bộ", "1" });
+            users.Add(new String[] { "c1", "Bộ", "1" });
+            return users.ToArray();
+        }
         public IWebDriver driver { get; set; }
         [OneTimeSetUp]
         public void SetUp()
@@ -101,9 +107,9 @@ namespace AutoTestProject
             driver = new ChromeDriver("D:\\Driver");
             driver.Manage().Window.Maximize();
             driver.Navigate().GoToUrl("https://localhost:44324/Manager/LoaiSP/Index");
+            
         }
-        [Test]
-        [TestCaseSource("sourceTestCase")]
+        [Test, TestCaseSource("GetLists")]
 
         public void codeProcess(String ten, String dvt, String loinhuan)
         {
@@ -139,7 +145,6 @@ namespace AutoTestProject
                 System.Threading.Thread.Sleep(1000);
                 dialog.Click();
                 Assert.Fail();
-
             }
         }
     /// </summary>
