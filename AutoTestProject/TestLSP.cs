@@ -1,9 +1,11 @@
 ﻿using NUnit.Framework;
+using OfficeOpenXml;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -93,12 +95,42 @@ namespace AutoTestProject
             new object[] {"c3", "Bộ", "1" },
             new object[] {"c4", "Bộ", "1" }
         };*/
+
         private static IEnumerable<object> GetLists()
         {
-            IList<object> users = new List<object>();
-            users.Add(new String[] { "c1", "Bộ", "1" });
-            users.Add(new String[] { "c1", "Bộ", "1" });
-            return users.ToArray();
+            string startupPath = System.IO.Directory.GetCurrentDirectory();
+            //FileInfo existingFile = new FileInfo(@Path.Combine(Directory.GetCurrentDirectory(), "TestCase.xlsx"));
+            //FileInfo existingFile = new FileInfo("\\TestCase.xlsx");
+            FileInfo existingFile = new FileInfo("D:\\TestCase.xlsx");
+            using (ExcelPackage package = new ExcelPackage(existingFile))
+            {
+                //get the first worksheet in the workbook
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                ExcelWorksheet worksheet= package.Workbook.Worksheets.FirstOrDefault(x => x.Name == "Sheet1");
+                int colCount = worksheet.Dimension.End.Column;  //get Column Count
+                int rowCount = worksheet.Dimension.End.Row;     //get row count
+                for (int row = 2; row <= rowCount; row++)
+                {
+                    String ten = worksheet.Cells[row, 1].Value?.ToString().Trim();
+                    String dvt = worksheet.Cells[row, 2].Value?.ToString().Trim();
+                    String loinhuan = worksheet.Cells[row, 3].Value?.ToString().Trim();
+                    yield return new String[] { ten, dvt, loinhuan };
+                }
+            }
+            /*for (int i = 2; i <= 5; i++)
+            {
+                //String ten = worksheet.Cells[i, 1].Value.ToString();
+                //String dvt = worksheet.Cells[i, 2].Value.ToString();
+                //String loinhuan = worksheet.Cells[i, 3].Value.ToString();
+                //yield return new String[] { ten, dvt, loinhuan };
+                yield return new String[] { $"Nhan {i}", "Bộ", "1" };
+            }
+            /*for (int i=0; i <5; i++)
+            {
+                //users.Add(new String[] { $"Nhan {i}", "Bộ", "1" });
+                yield return new String[] { $"Nhan {i}", "Bộ", "1" };
+            }*/
+            //return users.ToArray();
         }
         public IWebDriver driver { get; set; }
         [OneTimeSetUp]
@@ -113,6 +145,7 @@ namespace AutoTestProject
 
         public void codeProcess(String ten, String dvt, String loinhuan)
         {
+            if (ten == null || dvt == null || loinhuan == null) return;
             IWebElement tenLoaiSP = driver.FindElement(By.Name("TenLoaiSP"));
             //tenLoaiSP.SendKeys("aaaa1");
             tenLoaiSP.Clear();
