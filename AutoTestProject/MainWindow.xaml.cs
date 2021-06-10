@@ -27,28 +27,14 @@ namespace AutoTestProject
         {
             InitializeComponent();
             loadData();
+            List<String> list = new List<string>();
+            for (int i = 0; i < 10; i++)
+                list.Add(i.ToString());
+            writeData(list);
         }
         public void loadData()
         {
             IList<object> users = new List<object>();
-            /*string path = "TestCase.xlsx";
-            FileInfo fileInfo = new FileInfo(path);
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            ExcelPackage package = new ExcelPackage(fileInfo);
-            ExcelWorksheet worksheet = package.Workbook.Worksheets.FirstOrDefault();
-
-            // get number of rows and columns in the sheet
-            int rows = worksheet.Dimension.Rows; // 20
-            // loop through the worksheet rows and columns
-            for (int i = 2; i <= rows; i++)
-            {
-                String ten = worksheet.Cells[i, 1].Value.ToString();
-                String dvt = worksheet.Cells[i, 2].Value.ToString();
-                String loinhuan = worksheet.Cells[i, 3].Value.ToString();
-                users.Add(new String[] { ten, dvt, loinhuan });
-                //Console.WriteLine($"{ten}  {dvt}  {loinhuan}");
-
-            }*/
             FileInfo existingFile = new FileInfo("TestCase.xlsx");
             using (ExcelPackage package = new ExcelPackage(existingFile))
             {
@@ -66,15 +52,31 @@ namespace AutoTestProject
                         users.Add(new String[] {  ten, dvt, loinhuan});
                 }
             }
-            /*foreach (String[] obj in users)
+            
+        }
+        public void writeData(List<String> list)
+        {
+
+            FileInfo existingFile = new FileInfo("TestCase.xlsx");
+            using (ExcelPackage package = new ExcelPackage(existingFile))
             {
-                //Console.WriteLine($"{obj[0]} ");
-                //Console.WriteLine($"{obj[0]}  {obj[1]}  {obj[2]}");
-                string startupPath = System.IO.Directory.GetCurrentDirectory();
-                Console.WriteLine($" \n \n {startupPath}");
-            }*/
-            Console.WriteLine($" \n \n {System.IO.Path.Combine(@Directory.GetCurrentDirectory(), "\\TestCase.xlsx")}");
-            //Console.WriteLine($" \n {@"D:\", "TestCase.xlsx"}");
+                //get the first worksheet in the workbook
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+                int rowCount = worksheet.Dimension.End.Row;
+                worksheet.Cells[1, 4].Value = "Result";
+                for (int i=2; i < list.Count+2; i++)
+                {
+                    worksheet.Cells[i, 4].Value = i-2;
+                }
+                try
+                {
+                    package.Save();
+                }
+                catch (Exception) { }
+            }
+            
+
         }
     }
 }

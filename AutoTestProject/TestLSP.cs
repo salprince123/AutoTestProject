@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace AutoTestProject
 {
     public class TestLSP
-    {       
+    {
         /*public class LSP
         {
             public string Ten { get; set; }
@@ -86,21 +86,19 @@ namespace AutoTestProject
             }
         }*/
 
-        
-        /// VERSION 2
-       /* private static object[] sourceTestCase =
-        {
-            new object[] {"c1", "Bộ", "1" },
-            new object[] {"c2", "Bộ", "1" },
-            new object[] {"c3", "Bộ", "1" },
-            new object[] {"c4", "Bộ", "1" }
-        };*/
 
+        /// VERSION 2
+        /* private static object[] sourceTestCase =
+         {
+             new object[] {"c1", "Bộ", "1" },
+             new object[] {"c2", "Bộ", "1" },
+             new object[] {"c3", "Bộ", "1" },
+             new object[] {"c4", "Bộ", "1" }
+         };*/
+        public List<String> result = new List<string>();
         private static IEnumerable<object> GetLists()
         {
             string startupPath = System.IO.Directory.GetCurrentDirectory();
-            //FileInfo existingFile = new FileInfo(@Path.Combine(Directory.GetCurrentDirectory(), "TestCase.xlsx"));
-            //FileInfo existingFile = new FileInfo("\\TestCase.xlsx");
             FileInfo existingFile = new FileInfo("D:\\TestCase.xlsx");
             using (ExcelPackage package = new ExcelPackage(existingFile))
             {
@@ -117,20 +115,6 @@ namespace AutoTestProject
                     yield return new String[] { ten, dvt, loinhuan };
                 }
             }
-            /*for (int i = 2; i <= 5; i++)
-            {
-                //String ten = worksheet.Cells[i, 1].Value.ToString();
-                //String dvt = worksheet.Cells[i, 2].Value.ToString();
-                //String loinhuan = worksheet.Cells[i, 3].Value.ToString();
-                //yield return new String[] { ten, dvt, loinhuan };
-                yield return new String[] { $"Nhan {i}", "Bộ", "1" };
-            }
-            /*for (int i=0; i <5; i++)
-            {
-                //users.Add(new String[] { $"Nhan {i}", "Bộ", "1" });
-                yield return new String[] { $"Nhan {i}", "Bộ", "1" };
-            }*/
-            //return users.ToArray();
         }
         public IWebDriver driver { get; set; }
         [OneTimeSetUp]
@@ -170,6 +154,7 @@ namespace AutoTestProject
             IWebElement vali = driver.FindElement(By.XPath("/html/body/section/section/section/main/div/div[1]/div/div[2]/form/div[1]/div[2]/span"));
             if (vali.Text.Length == 0)
             {
+                result.Add("Pass");
                 Assert.Pass();
             }
             else
@@ -177,6 +162,7 @@ namespace AutoTestProject
                 IWebElement dialog = driver.FindElement(By.XPath("/html/body/div/div/div[4]/div/button"));
                 System.Threading.Thread.Sleep(1000);
                 dialog.Click();
+                result.Add("Fail");
                 Assert.Fail();
             }
         }
@@ -184,6 +170,26 @@ namespace AutoTestProject
     [OneTimeTearDown]
         public void Close()
         {
+            //save result in excel file
+            string startupPath = System.IO.Directory.GetCurrentDirectory();
+            FileInfo existingFile = new FileInfo("D:\\TestCase.xlsx");
+            using (ExcelPackage package = new ExcelPackage(existingFile))
+            {
+                //get the first worksheet in the workbook
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+                int rowCount = worksheet.Dimension.End.Row;
+                worksheet.Cells[1, 4].Value = "Result";
+                for (int i = 2; i < result.Count + 2; i++)
+                {
+                    worksheet.Cells[i, 4].Value = result[i - 2];
+                }
+                try
+                {
+                    package.Save();
+                }
+                catch (Exception) { }
+            }
             driver.Close();
         }
     }
