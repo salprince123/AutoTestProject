@@ -1,18 +1,19 @@
-﻿using NUnit.Framework;
-using OfficeOpenXml;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Support.UI;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NUnit.Framework;
+using OfficeOpenXml;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
+
 
 namespace AutoTestProject
 {
-    public class TestLSP
+    public class TestPhieuMuaHang
     {
         public Dictionary<int, string> result = new Dictionary<int, string>();
         public List<String> actualResult = new List<string>();
@@ -25,15 +26,16 @@ namespace AutoTestProject
             {
                 //get the first worksheet in the workbook
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-                ExcelWorksheet worksheet= package.Workbook.Worksheets.FirstOrDefault(x => x.Name == "LoaiSP");
-                int rowCount = worksheet.Dimension.End.Row;     //get row count
+                ExcelWorksheet worksheet = package.Workbook.Worksheets.FirstOrDefault(x => x.Name == "PhieuMuaHang");
+                int rowCount = worksheet.Dimension.End.Row;
                 for (int row = 2; row <= rowCount; row++)
                 {
-                    String ten = worksheet.Cells[row, 1].Value?.ToString().Trim();
-                    String dvt = worksheet.Cells[row, 2].Value?.ToString().Trim();
-                    String loinhuan = worksheet.Cells[row, 3].Value?.ToString().Trim();
-                    String ketQuaMongMuon = worksheet.Cells[row, 4].Value?.ToString().Trim();
-                    yield return new String[] { ten, dvt, loinhuan , ketQuaMongMuon, row.ToString() };
+                    String nhaCC = worksheet.Cells[row, 1].Value?.ToString().Trim();
+                    String ngayLap = worksheet.Cells[row, 2].Value?.ToString().Trim();
+                    String tenSP= worksheet.Cells[row, 3].Value?.ToString().Trim();
+                    String soLuong = worksheet.Cells[row, 4].Value?.ToString().Trim();
+                    String ketQuaMongMuon = worksheet.Cells[row, 5].Value?.ToString().Trim();
+                    yield return new String[] { nhaCC,ngayLap,tenSP,soLuong, ketQuaMongMuon, row.ToString() };
                 }
             }
         }
@@ -42,34 +44,38 @@ namespace AutoTestProject
         public void SetUp()
         {
             driver = new ChromeDriver("D:\\Driver");
-            driver.Navigate().GoToUrl("https://localhost:44324/Manager/LoaiSP/Index");
-            
+            //driver.Manage().Window.Minimize();
+            driver.Navigate().GoToUrl("https://localhost:44324/Manager/CT_PhieuMuaHang/Create");
+
         }
         [Test, TestCaseSource("GetLists")]
 
-        public void codeProcess(String ten, String dvt, String loinhuan, String ketQuaMongMuon, String viTri)
+        public void Process(String nhacc, String ngaylap,String ten, String soluong, String ketQuaMongMuon, String viTri)
         {
-            if (ten == null || dvt == null || loinhuan == null) return;
             String ketQuaThucTe = "FAIL";
             int vitri = int.Parse(viTri);
-            IWebElement tenLoaiSP = driver.FindElement(By.Name("TenLoaiSP"));
-            tenLoaiSP.Clear();
-            tenLoaiSP.SendKeys(ten);
-            System.Threading.Thread.Sleep(500);
-
-            IWebElement iWebelement = driver.FindElement(By.Id("MaDVT"));
+            IWebElement iWebelement = driver.FindElement(By.XPath("/html/body/section/section/section/form/fieldset[1]/div/div[1]/div[1]/div/select"));
             SelectElement selected = new SelectElement(iWebelement);
-            selected.SelectByText(dvt);
+            selected.SelectByText(nhacc);
             System.Threading.Thread.Sleep(500);
 
-            IWebElement loiNhuan = driver.FindElement(By.Name("PhanTramLoiNhuan"));
-            loiNhuan.Clear();
-            loiNhuan.SendKeys(loinhuan);
-            tenLoaiSP.SendKeys("");
+            IWebElement calendar = driver.FindElement(By.Id("txtNgayGiaoDich"));
+            calendar.SendKeys(ngaylap);
             System.Threading.Thread.Sleep(500);
 
-            IWebElement btThem = driver.FindElement(By.XPath("/html/body/section/section/section/main/div/div[1]/div/div[2]/form/input[2]"));
-            btThem.Submit();
+            IWebElement CbtenSP = driver.FindElement(By.XPath("/html/body/section/section/section/form/fieldset[2]/div/div[1]/div[1]/div/select"));
+            SelectElement tenSP = new SelectElement(CbtenSP);
+            tenSP.SelectByText(ten);
+            System.Threading.Thread.Sleep(500);
+
+            IWebElement soLuong = driver.FindElement(By.XPath("/html/body/section/section/section/form/fieldset[2]/div/div[2]/div[1]/div/input"));
+            soLuong.Clear();
+            soLuong.SendKeys(soluong);
+            System.Threading.Thread.Sleep(500);
+
+            IWebElement btThem = driver.FindElement(By.XPath("/html/body/section/section/section/form/fieldset[2]/div/div[2]/div[4]/div/input"));
+            btThem.Click();
+
             System.Threading.Thread.Sleep(500);
             try
             {
@@ -81,12 +87,14 @@ namespace AutoTestProject
             {
                 ketQuaThucTe = "PASS";
             }
+            System.Threading.Thread.Sleep(5000);
             if (ketQuaThucTe.Equals(ketQuaMongMuon)) result[vitri] = "PASS";
             else result[vitri] = "FAIL";
             Assert.AreEqual(ketQuaMongMuon.Trim(), ketQuaThucTe.Trim());
+
         }
-    /// </summary>
-    [OneTimeTearDown]
+        /// </summary>
+        [OneTimeTearDown]
         public void Close()
         {
             //save result in excel file
@@ -97,10 +105,10 @@ namespace AutoTestProject
             {
                 //get the first worksheet in the workbook
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-                ExcelWorksheet worksheet = package.Workbook.Worksheets.FirstOrDefault(x => x.Name == "LoaiSP");
+                ExcelWorksheet worksheet = package.Workbook.Worksheets.FirstOrDefault(x => x.Name == "PhieuMuaHang");
                 int rowCount = worksheet.Dimension.End.Row;
                 foreach (var obj in result)
-                    worksheet.Cells[obj.Key, 5].Value = obj.Value;
+                    worksheet.Cells[obj.Key, 6].Value = obj.Value;
                 package.Save();
             }
             driver.Close();

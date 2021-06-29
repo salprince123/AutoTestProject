@@ -82,7 +82,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ExcelFilePath.cs" />
+    <Compile Include="LAB3\Lab3.cs" />
+    <Compile Include="TestBaoCaoTonKho.cs" />
+    <Compile Include="TestDVT.cs" />
+    <Compile Include="TestLoaiDV.cs" />
     <Compile Include="TestLSP.cs" />
+    <Compile Include="TestNCC.cs" />
+    <Compile Include="TestPhieuBanHang.cs" />
+    <Compile Include="TestPhieuDichVu.cs" />
+    <Compile Include="TestPhieuMuaHang.cs" />
+    <Compile Include="TestSP.cs" />
+    <Compile Include="TestThamSo.cs" />
+    <Compile Include="Tool\TableString.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
