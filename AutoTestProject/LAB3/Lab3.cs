@@ -26,8 +26,22 @@ namespace AutoTestProject.LAB3
                         else return 28;
                     }
                 default: return 0;
-
             }
+        }        
+        [Test]
+        [TestCase(1, 2000, 31)]
+        [TestCase(2, 2000, 29)]
+        [TestCase(4, 2000, 30)]
+        [TestCase(13, 2000, 0)]
+        [TestCase(0, 2021, 0)]
+        [TestCase(1, 2021, 31)]
+        [TestCase(2, 2021, 28)]
+        [TestCase(4, 2021, 30)]
+        [TestCase(13, 2021, 0)]
+
+        public void autoTestDayInMonth(int month, int year, int expected)
+        {
+            Assert.AreEqual(expected, dayInMonth(month, year));
         }
         public bool isValidDate(int day, int month, int year)
         {
@@ -35,18 +49,53 @@ namespace AutoTestProject.LAB3
                 return false;
             if (day < 1)
                 return false;
-            if (day > dayInMonth(day, year))
+            if (day > dayInMonth(month, year))
                 return false;
             return true;
         }
         [Test]
-        [TestCase(1,1,2021,true)]
-        [TestCase(1, 1, 2022, true)]
-        [TestCase(1, 1, 2023, true)]
+        [TestCase(29, 2, 2000, true)]
+        [TestCase(29, 2, 2016, true)]
+        [TestCase(29, 2, 2100, false)]
+        [TestCase(29, 2, 2021, false)]
+        [TestCase(29, 3, 2000, true)]
+        [TestCase(29, 3, 2016, true)]
+        [TestCase(29, 3, 2100, true)]
+        [TestCase(29, 3, 2021, true)]
+        [TestCase(29, 4, 2000, true)]
+        [TestCase(29, 4, 2016, true)]
+        [TestCase(29, 4, 2100, true)]
+        [TestCase(29, 4, 2021, true)]
+        [TestCase(30, 2, 2000, false)]
+        [TestCase(30, 2, 2016, false)]
+        [TestCase(30, 2, 2100, false)]
+        [TestCase(30, 2, 2021, false)]
+        [TestCase(30, 3, 2000, true)]
+        [TestCase(30, 3, 2016, true)]
+        [TestCase(30, 3, 2100, true)]
+        [TestCase(30, 3, 2021, true)]
+        [TestCase(30, 4, 2000, true)]
+        [TestCase(30, 4, 2016, true)]
+        [TestCase(30, 4, 2100, true)]
+        [TestCase(30, 4, 2021, true)]
+        [TestCase(31, 2, 2000, false)]
+        [TestCase(31, 2, 2016, false)]
+        [TestCase(31, 2, 2100, false)]
+        [TestCase(31, 2, 2021, false)]
+        [TestCase(31, 3, 2000, true)]
+        [TestCase(31, 3, 2016, true)]
+        [TestCase(31, 3, 2100, true)]
+        [TestCase(31, 3, 2021, true)]
+        [TestCase(31, 4, 2000, false)]
+        [TestCase(31, 4, 2016, false)]
+        [TestCase(31, 4, 2100, false)]
+        [TestCase(31, 4, 2021, false)]
         public void autoTestIsValidDate(int day, int month, int year, bool expected)
         {
             Assert.AreEqual(expected, isValidDate(day, month, year));
         }
+
         
+
     }
 }
