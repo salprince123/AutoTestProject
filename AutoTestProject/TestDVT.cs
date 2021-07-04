@@ -42,7 +42,7 @@ namespace AutoTestProject
         {
             driver = new ChromeDriver("D:\\Driver");
             driver.Navigate().GoToUrl("https://localhost:44324/Manager/DVT/Index");
-           
+            
         }
         [Test, TestCaseSource("GetLists")]
 

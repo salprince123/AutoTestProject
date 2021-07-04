@@ -38,16 +38,20 @@ namespace AutoTestProject.LAB3
         [TestCase(2, 2021, 28)]
         [TestCase(4, 2021, 30)]
         [TestCase(13, 2021, 0)]
+        [TestCase(1, -1000, 0)]
+        [TestCase(1, 0, 0)]
+        [TestCase(1, 9999999999999, 0)]
+
 
         public void autoTestDayInMonth(int month, int year, int expected)
         {
             Assert.AreEqual(expected, dayInMonth(month, year));
         }
-        public bool isValidDate(int day, int month, int year)
+        public bool isValidDate(byte day, byte month, short year)
         {
-            if (year < 1 && year > 12)
+            if ((month < 1 && month > 12))
                 return false;
-            if (day < 1)
+            if ((day < 1))
                 return false;
             if (day > dayInMonth(month, year))
                 return false;
@@ -90,12 +94,20 @@ namespace AutoTestProject.LAB3
         [TestCase(31, 4, 2016, false)]
         [TestCase(31, 4, 2100, false)]
         [TestCase(31, 4, 2021, false)]
-        public void autoTestIsValidDate(int day, int month, int year, bool expected)
+        [TestCase(0, 1, 2000, false)]
+        [TestCase(32, 1, 2000, false)]
+        [TestCase(1, -1, 2000, false)]
+        [TestCase(1, 0, 2000, false)]
+        [TestCase(1, 13, 2000, false)]
+        [TestCase(1, 1, -100, false)]
+        [TestCase(1, 1, 0, false)]
+        [TestCase(1, 1, 999, false)]
+        [TestCase(1, 1, 3001, false)]
+        [TestCase(1, 1, 99999999, false)]
+
+        public void autoTestIsValidDate(byte day, byte month, short year, bool expected)
         {
             Assert.AreEqual(expected, isValidDate(day, month, year));
         }
-
-        
-
     }
 }
